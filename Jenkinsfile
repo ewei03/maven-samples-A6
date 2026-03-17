@@ -20,7 +20,7 @@ pipeline {
       steps {
         deleteDir()
         bat '''
-git clone https://github.com/ewei03/maven-samples.git .
+git clone https://github.com/ewei03/maven-samples-A6.git .
 git checkout master
 '''
       }
@@ -29,7 +29,7 @@ git checkout master
     stage('prepare bisect script') {
       steps {
         writeFile file: 'bisect_test.bat', text: '''@echo off
-call mvn clean test verify
+call mvn test
 exit /b %ERRORLEVEL%
 '''
       }
@@ -39,7 +39,9 @@ exit /b %ERRORLEVEL%
       steps {
         bat '''
 git bisect reset
-git bisect start %BAD_COMMIT% %GOOD_COMMIT%
+git bisect start
+git bisect bad %BAD_COMMIT%
+git bisect good %GOOD_COMMIT%
 git bisect run cmd /c .\\bisect_test.bat
 '''
       }
