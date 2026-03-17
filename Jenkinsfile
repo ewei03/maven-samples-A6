@@ -38,7 +38,6 @@ exit /b %ERRORLEVEL%
     stage('run bisect') {
       steps {
         bat '''
-git bisect reset
 git bisect start
 git bisect bad %BAD_COMMIT%
 git bisect good %GOOD_COMMIT%
