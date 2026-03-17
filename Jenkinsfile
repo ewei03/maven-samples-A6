@@ -1,24 +1,18 @@
 pipeline {
   agent any
-
-  tools {
-    maven 'mvn'
-    jdk 'jdk'
-  }
-
   stages {
     stage('check out') {
       steps {
-        git url: 'https://github.com/ewei03/maven-samples', branch: 'master'
+        git(url: 'https://github.com/ewei03/maven-samples', branch: 'master')
       }
     }
 
     stage('prepare bisect script') {
       steps {
-        writeFile file: 'bisect_test.bat', text: '''@echo off
+        writeFile(file: 'bisect_test.bat', text: '''@echo off
 call mvn test
 exit /b %ERRORLEVEL%
-'''
+''')
       }
     }
 
@@ -31,11 +25,16 @@ git bisect run bisect_test.bat
 '''
       }
     }
-  }
 
+  }
+  tools {
+    maven 'mvn'
+    jdk 'jdk'
+  }
   post {
     always {
       bat 'git bisect reset'
     }
+
   }
 }
